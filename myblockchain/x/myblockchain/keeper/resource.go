@@ -32,7 +32,7 @@ func (k Keeper) GetResourceCount(ctx sdk.Context) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
-func GetResourceIDBytes(id uint64) []byte {
+func GetResourceIDBytes(id string) []byte {
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, id)
 	return bz
@@ -47,7 +47,7 @@ func (k Keeper) SetResourceCount(ctx sdk.Context, count uint64) {
 	store.Set(byteKey, bz)
 }
 
-func (k Keeper) GetResource(ctx sdk.Context, id uint64) (val types.Resource, found bool) {
+func (k Keeper) GetResource(ctx sdk.Context, id string) (val types.Resource, found bool) {
 	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	store := prefix.NewStore(storeAdapter, types.KeyPrefix(types.ResourceKey))
 	b := store.Get(GetResourceIDBytes(id))
@@ -65,7 +65,7 @@ func (k Keeper) SetResource(ctx sdk.Context, resource types.Resource) {
 	store.Set(GetResourceIDBytes(resource.Id), b)
 }
 
-func (k Keeper) RemoveResource(ctx sdk.Context, id uint64) {
+func (k Keeper) RemoveResource(ctx sdk.Context, id string) {
 	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	store := prefix.NewStore(storeAdapter, types.KeyPrefix(types.ResourceKey))
 	store.Delete(GetResourceIDBytes(id))
